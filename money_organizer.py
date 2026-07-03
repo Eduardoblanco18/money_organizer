@@ -1,6 +1,34 @@
 import os
+import csv
 
 gastos =[]
+
+def salvar_gastos():
+    with open("gastos.csv", "w", newline="", encoding="utf-8") as arquivo:
+        escritor = csv.DictWriter(arquivo, fieldnames=["Descrição", "Categoria", "Valor"])
+        
+        escritor.writeheader()
+
+        for gasto in gastos:
+            escritor.writerow(gasto)
+
+def gerar_relatorio(orcamento):
+    texto = ""
+    texto += f"Salário: R${round(orcamento["Salário"],2)}\n"
+    for categoria in orcamento:
+        if categoria == "Salário":
+            continue
+        gasto = calcular_gasto(categoria)
+        resto = orcamento[categoria] - gasto
+
+        texto += (f"""
+Categoria: {categoria}
+    Limite: R${round(orcamento[categoria],2)}
+    Gastos: R${round(gasto,2)}
+    Resto:  R${round(resto,2)}
+""")
+    
+    return texto
 
 def limpar_tela():
     os.system("cls")
@@ -31,27 +59,17 @@ def organizar_orcamento(salario):
 def fazer_relatorio(orcamento):
     limpar_tela()
 
-    for categoria in orcamento:
-        if categoria == "Salário":
-            print(f"{categoria}: R${round(orcamento[categoria],2)}")
-            continue
-        gasto = calcular_gasto(categoria)
-        resto = orcamento[categoria] - gasto
+    print(gerar_relatorio(orcamento))
 
-        print(f"""
-Categoria: {categoria}
-    Limite: R${round(orcamento[categoria],2)}
-    Gastos: R${round(orcamento[categoria],2)}
-    Resto:  R${round(orcamento[categoria],2)}
-""")
+    with open("Relátorio.txt", "w", encoding="utf-8") as arquivo:
+        arquivo.write(gerar_relatorio(orcamento))
 
     apertar_para_continuar()
-
 
 def listar_orcamento(orcamento):
     limpar_tela()
     for categoria in orcamento:
-        print(f"{categoria}: R${round(orcamento[categoria],2)}")
+        print(f"{categoria}: R${round(orcamento[categoria],2)}\n")
     
     apertar_para_continuar()
 
@@ -123,6 +141,7 @@ def escolher_opcao(orcamento):
                 fazer_relatorio(orcamento)
                 sair = False
             case 4:
+                salvar_gastos()
                 sair = True
             case _:
                 print("valor não reconhecido")
