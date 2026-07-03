@@ -3,6 +3,16 @@ import csv
 
 gastos =[]
 
+def ler_historico():
+    gastos_antigos =[]
+
+    with open("gastos.csv","r", encoding="utf-8") as arquivo:
+        leitor = csv.DictReader(arquivo)
+
+        for conteudo in leitor:
+            conteudo["Valor"] = float(conteudo["Valor"])
+            gastos.append(conteudo)
+
 def salvar_gastos():
     with open("gastos.csv", "w", newline="", encoding="utf-8") as arquivo:
         escritor = csv.DictWriter(arquivo, fieldnames=["Descrição", "Categoria", "Valor"])
@@ -164,6 +174,8 @@ def main():
             print("Valor inválido")
 
     orcamento = organizar_orcamento(salario)
+
+    gastos = ler_historico()
 
     sair = False
 
