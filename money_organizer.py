@@ -3,10 +3,107 @@ import csv
 
 gastos =[]
 
+def excluir_gasto_da_lista(posicao):
+    certeza = input("Tem certeza que deseja apagar (s/n)\n>")
+    if certeza.lower() == "s":
+        del(gastos[posicao])
+
+def escolher_categoria():
+    escolha_certa = False
+    while not escolha_certa:
+        print(
+"""Qual categoria ele se encaixa?
+1- Necessidade
+2- Lazer
+3- Investimentos""")
+        try:
+            opcao = int(input(">"))
+            match opcao:
+                case 1:
+                    categoria = "Necessidade"
+                    escolha_certa = True
+                case 2:
+                    categoria = "Lazer"
+                    escolha_certa = True
+                case 3:
+                    categoria = "Investimentos"
+                    escolha_certa = True
+                case _:
+                    print("Não existe essa opção")
+        except ValueError:
+            print("Não existe essa opção")
+
+    return categoria
+
+def editar_gasto(Detalhe, posicao):
+    limpar_tela()
+    edicao_fazivel = False
+    while not edicao_fazivel:
+        try:
+            edicao_fazivel = True
+            if Detalhe == "Descrição":
+                edicao = str(input("Coloque o novo nome\n>"))
+            elif Detalhe == "Categoria":
+                edicao = escolher_categoria()
+            else:
+                edicao = float(input("Coloque o novo valor\n>"))
+        except ValueError:
+            edicao_fazivel = False
+            print("Não é possível realizar a edição")
+    
+    gastos[posicao][Detalhe] = edicao
+
+def editar_gastos():
+    limpar_tela()
+    print(f"{"Nº":<3} {"Descrição":<15}{"Categoria":<20}{"Valor"}")
+    print("-"*50)
+    for indice, gasto in enumerate(gastos):
+        print(f"{indice + 1:<3} {gasto["Descrição"]:<15}{gasto["Categoria"]:<20}{gasto["Valor"]}")
+
+    posicao_valida = False
+    while not posicao_valida:
+        try:
+            posicao = int(input("Escolha um item que queira editar\n>")) - 1
+            posicao_valida = True
+        except ValueError:
+            print("Valor incompatível!")
+    limpar_tela()
+    print("""
+O que deseja editar?
+1- Trocar Nome
+2- Trocar Categoria
+3- Trocar Valor
+4- Excluir
+""")
+    
+    opcao_acessivel = False
+    while not opcao_acessivel:
+        try:
+            opcao_escolhida = int(input(">"))
+            opcao_acessivel = True
+            match opcao_escolhida:
+                case 1:
+                    editar_gasto("Descrição", posicao)
+                case 2:
+                    editar_gasto("Categoria", posicao)
+                case 3:
+                    editar_gasto("Valor", posicao)
+                case 4:
+                    excluir_gasto_da_lista(posicao)
+                case _:
+                    print("Opção Inválida")
+                    opcao_acessivel = False
+        except ValueError:
+            print("Opção Inválida")
+
+
+    apertar_para_continuar()
+
 def vizualizar_historico():
     limpar_tela()
     print("-"*20)
-    for gasto in gastos:
+    for indice,gasto in enumerate(gastos):
+        print(f"{indice + 1}")
         for chave, valor in gasto.items():
             print(f"{chave}: {valor}")
         print("-"*20)
@@ -15,8 +112,6 @@ def vizualizar_historico():
     apertar_para_continuar()
 
 def ler_historico():
-    gastos_antigos =[]
-
     with open("gastos.csv","r", encoding="utf-8") as arquivo:
         leitor = csv.DictReader(arquivo)
 
@@ -98,29 +193,7 @@ def adicionar_gastos():
     limpar_tela()
     descricao = input("Com o que vc gastou?\n")
 
-    escolha_certa = False
-    while not escolha_certa:
-        print(
-"""Qual categoria ele se encaixa?
-1- Necessidade
-2- Lazer
-3- Investimentos""")
-        try:
-            opcao = int(input(">"))
-            match opcao:
-                case 1:
-                    categoria = "Necessidade"
-                    escolha_certa = True
-                case 2:
-                    categoria = "Lazer"
-                    escolha_certa = True
-                case 3:
-                    categoria = "Investimentos"
-                    escolha_certa = True
-                case _:
-                    print("Não existe essa opção")
-        except ValueError:
-            print("Não existe essa opção")
+    categoria = escolher_categoria()
 
     valor_valido = False
     while not valor_valido:
@@ -146,8 +219,10 @@ def escolher_opcao(orcamento):
     3- Fazer Relatório
           
     4- Ver Histórico de Gastos
+          
+    5- Editar Lista de Gastos
            
-    5- Sair
+    6- Sair
           
     """)
     try:
@@ -167,6 +242,9 @@ def escolher_opcao(orcamento):
                 vizualizar_historico()
                 sair = False
             case 5:
+                editar_gastos()
+                sair = False
+            case 6:
                 salvar_gastos()
                 sair = True
             case _:
@@ -191,7 +269,7 @@ def main():
 
     orcamento = organizar_orcamento(salario)
 
-    gastos = ler_historico()
+    ler_historico()
 
     sair = False
 
