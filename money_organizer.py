@@ -3,6 +3,17 @@ import csv
 
 gastos =[]
 
+def vizualizar_historico():
+    limpar_tela()
+    print("-"*20)
+    for gasto in gastos:
+        for chave, valor in gasto.items():
+            print(f"{chave}: {valor}")
+        print("-"*20)
+        #print("\n")
+    
+    apertar_para_continuar()
+
 def ler_historico():
     gastos_antigos =[]
 
@@ -130,11 +141,13 @@ def escolher_opcao(orcamento):
            
     1- Ver Orçamento
            
-    2- Adicionar gastos
+    2- Adicionar Gastos
            
-    3- Fazer relatório
+    3- Fazer Relatório
+          
+    4- Ver Histórico de Gastos
            
-    4- Sair
+    5- Sair
           
     """)
     try:
@@ -151,6 +164,9 @@ def escolher_opcao(orcamento):
                 fazer_relatorio(orcamento)
                 sair = False
             case 4:
+                vizualizar_historico()
+                sair = False
+            case 5:
                 salvar_gastos()
                 sair = True
             case _:
