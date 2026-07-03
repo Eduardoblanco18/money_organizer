@@ -2,6 +2,9 @@ import os
 
 gastos =[]
 
+def limpar_tela():
+    os.system("cls")
+
 def apertar_para_continuar():
     input("aperte para continuar")
 
@@ -17,13 +20,16 @@ def organizar_orcamento(salario):
         investimento = salario*0.2
         
         print("Organização feita!")
+        apertar_para_continuar()
+        limpar_tela()
 
-        return {"Necessidade": necessidade,
+        return {"Salário": salario,
+                "Necessidade": necessidade,
                 "Lazer": lazer,
                 "Investimentos": investimento}
 
 def fazer_relatorio(orcamento):
-    os.system("cls")
+    limpar_tela()
 
     gastos_necessidade = calcular_gasto("Necessidade")
     
@@ -36,6 +42,7 @@ def fazer_relatorio(orcamento):
     resto_investimento = orcamento["Investimentos"] - gastos_investimento
 
     print(f"""
+    Salário: R${round(orcamento["Salário"], 2)}
 
     Categoria: Necessidade
         Limite: R${round(orcamento["Necessidade"], 2)}
@@ -58,44 +65,47 @@ def fazer_relatorio(orcamento):
 
 
 def listar_orcamento(orcamento):
-    os.system("cls")
-    print(f"""
-    Necessidade: R${round(orcamento["Necessidade"],2)}
-
-    Lazer: R${round(orcamento["Lazer"], 2)}
-
-    Investimentos: R${round(orcamento["Investimentos"], 2)}
+    limpar_tela()
+    for categoria in orcamento:
+        print(f"{categoria}: R${round(orcamento[categoria],2)}")
     
-    """)
     apertar_para_continuar()
 
 def adicionar_gastos():
-    os.system("cls")
+    limpar_tela()
     descricao = input("Com o que vc gastou?")
 
     escolha_certa = False
     while not escolha_certa:
         print("""
-        Qual categoria ele se encaixa?
-            1- Necessidade
-            2- Lazer
-            3- Investimentos
-        """)
-        opcao = int(input(">"))
-        match opcao:
-            case 1:
-                categoria = "Necessidade"
-                escolha_certa = not escolha_certa
-            case 2:
-                categoria = "Lazer"
-                escolha_certa = not escolha_certa
-            case 3:
-                categoria = "Investimentos"
-                escolha_certa = not escolha_certa 
-            case _:
-                print("Não existe essa opção")
+Qual categoria ele se encaixa?
+1- Necessidade
+2- Lazer
+3- Investimentos""")
+        try:
+            opcao = int(input(">"))
+            match opcao:
+                case 1:
+                    categoria = "Necessidade"
+                    escolha_certa = True
+                case 2:
+                    categoria = "Lazer"
+                    escolha_certa = True
+                case 3:
+                    categoria = "Investimentos"
+                    escolha_certa = True
+                case _:
+                    print("Não existe essa opção")
+        except ValueError:
+            print("Não existe essa opção")
 
-    valor = int(input("Quanto você gastou?"))
+    valor_valido = False
+    while not valor_valido:
+        try:
+            valor = float(input("Quanto você gastou?\n"))
+            valor_valido = True
+        except ValueError:
+            print("Valor inválido!")
 
     gastos.append({"Descrição": descricao, "Categoria": categoria, "Valor": valor})
 
@@ -115,29 +125,40 @@ def escolher_opcao(orcamento):
     4- Sair
           
     """)
-     
-    escolha = int(input("Escolha uma opção"))
+    try:
+        escolha = int(input("Escolha uma opção"))
 
-    match escolha:
-        case 1:
-            listar_orcamento(orcamento)
-            sair = False
-        case 2:
-            adicionar_gastos()
-            sair = False
-        case 3:
-            fazer_relatorio(orcamento)
-            sair = False
-        case 4:
-            sair = True
-        case _:
-            print("valor não reconhecido")
-            sair = False
+        match escolha:
+            case 1:
+                listar_orcamento(orcamento)
+                sair = False
+            case 2:
+                adicionar_gastos()
+                sair = False
+            case 3:
+                fazer_relatorio(orcamento)
+                sair = False
+            case 4:
+                sair = True
+            case _:
+                print("valor não reconhecido")
+                apertar_para_continuar()
+                sair = False
+    except ValueError:
+        print("valor não reconhecido")
+        apertar_para_continuar()
+        sair = False
 
     return sair
 
 def main():
-    salario = float(input("Qual é o seu salário?"))
+    salario_valido = False
+    while not salario_valido:
+        try:
+            salario = float(input("Qual é o seu salário?"))
+            salario_valido = True
+        except ValueError:
+            print("Valor inválido")
 
     orcamento = organizar_orcamento(salario)
 
@@ -145,7 +166,7 @@ def main():
 
     while not sair:
         sair = escolher_opcao(orcamento)
-        os.system("cls")
+        limpar_tela()
 
 if __name__ == "__main__":
     main()
