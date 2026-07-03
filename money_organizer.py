@@ -85,12 +85,12 @@ def listar_orcamento(orcamento):
 
 def adicionar_gastos():
     limpar_tela()
-    descricao = input("Com o que vc gastou?")
+    descricao = input("Com o que vc gastou?\n")
 
     escolha_certa = False
     while not escolha_certa:
-        print("""
-Qual categoria ele se encaixa?
+        print(
+"""Qual categoria ele se encaixa?
 1- Necessidade
 2- Lazer
 3- Investimentos""")
@@ -114,14 +114,14 @@ Qual categoria ele se encaixa?
     valor_valido = False
     while not valor_valido:
         try:
-            valor = float(input("Quanto você gastou?\n\n"))
+            valor = float(input("Quanto você gastou?\n"))
             valor_valido = True
         except ValueError:
             print("Valor inválido!")
 
     gastos.append({"Descrição": descricao, "Categoria": categoria, "Valor": valor})
 
-    print("Gasto adicionado com sucesso\n")
+    print("\nGasto adicionado com sucesso\n")
     apertar_para_continuar()
 
 def escolher_opcao(orcamento):
