@@ -31,35 +31,19 @@ def organizar_orcamento(salario):
 def fazer_relatorio(orcamento):
     limpar_tela()
 
-    gastos_necessidade = calcular_gasto("Necessidade")
-    
-    gastos_lazer = calcular_gasto("Lazer")
-    
-    gastos_investimento = calcular_gasto("Investimentos")
-    
-    resto_necessidade = orcamento["Necessidade"] - gastos_necessidade
-    resto_lazer = orcamento["Lazer"] - gastos_lazer
-    resto_investimento = orcamento["Investimentos"] - gastos_investimento
+    for categoria in orcamento:
+        if categoria == "Salário":
+            print(f"{categoria}: R${round(orcamento[categoria],2)}")
+            continue
+        gasto = calcular_gasto(categoria)
+        resto = orcamento[categoria] - gasto
 
-    print(f"""
-    Salário: R${round(orcamento["Salário"], 2)}
-
-    Categoria: Necessidade
-        Limite: R${round(orcamento["Necessidade"], 2)}
-        Gasto: R${round(gastos_necessidade, 2)}
-        Resto: R${round(resto_necessidade, 2)}
-
-    Categoria: Lazer
-        Limite: R${round(orcamento["Lazer"], 2)}
-        Gasto: R${round(gastos_lazer, 2)}
-        Resto: R${round(resto_lazer, 2)}
-
-    Categoria: Investimento
-        Limite: R${round(orcamento["Investimentos"], 2)}
-        Gasto: R${round(gastos_investimento, 2)}
-        Resto: R${round(resto_investimento, 2)}
-
-    """)
+        print(f"""
+Categoria: {categoria}
+    Limite: R${round(orcamento[categoria],2)}
+    Gastos: R${round(orcamento[categoria],2)}
+    Resto:  R${round(orcamento[categoria],2)}
+""")
 
     apertar_para_continuar()
 
@@ -102,7 +86,7 @@ Qual categoria ele se encaixa?
     valor_valido = False
     while not valor_valido:
         try:
-            valor = float(input("Quanto você gastou?\n"))
+            valor = float(input("Quanto você gastou?\n\n"))
             valor_valido = True
         except ValueError:
             print("Valor inválido!")
@@ -126,7 +110,7 @@ def escolher_opcao(orcamento):
           
     """)
     try:
-        escolha = int(input("Escolha uma opção"))
+        escolha = int(input("Escolha uma opção\n>"))
 
         match escolha:
             case 1:
