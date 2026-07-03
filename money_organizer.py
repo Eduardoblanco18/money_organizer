@@ -53,7 +53,7 @@ def editar_gasto(Detalhe, posicao):
     
     gastos[posicao][Detalhe] = edicao
 
-def editar_gastos():
+def editar_historico():
     limpar_tela()
     print(f"{"Nº":<3} {"Descrição":<15}{"Categoria":<20}{"Valor"}")
     print("-"*50)
@@ -64,7 +64,10 @@ def editar_gastos():
     while not posicao_valida:
         try:
             posicao = int(input("Escolha um item que queira editar\n>")) - 1
-            posicao_valida = True
+            if 0 <= posicao <= len(gastos):
+                posicao_valida = True
+            else:
+                print("Valor incompatível!")
         except ValueError:
             print("Valor incompatível!")
     limpar_tela()
@@ -242,7 +245,7 @@ def escolher_opcao(orcamento):
                 vizualizar_historico()
                 sair = False
             case 5:
-                editar_gastos()
+                editar_historico()
                 sair = False
             case 6:
                 salvar_gastos()
