@@ -18,35 +18,37 @@ def organizar_orcamento(salario):
         
         print("Organização feita!")
 
-        return necessidade, lazer, investimento 
+        return {"Necessidade": necessidade,
+                "Lazer": lazer,
+                "Investimentos": investimento}
 
-def fazer_relatorio(necessidade, lazer, investimento):
+def fazer_relatorio(orcamento):
     os.system("cls")
 
     gastos_necessidade = calcular_gasto("Necessidade")
     
     gastos_lazer = calcular_gasto("Lazer")
     
-    gastos_investimento = calcular_gasto("Investimento")
+    gastos_investimento = calcular_gasto("Investimentos")
     
-    resto_necessidade = necessidade - gastos_necessidade
-    resto_lazer = lazer - gastos_lazer
-    resto_investimento = investimento - gastos_investimento
+    resto_necessidade = orcamento["Necessidade"] - gastos_necessidade
+    resto_lazer = orcamento["Lazer"] - gastos_lazer
+    resto_investimento = orcamento["Investimentos"] - gastos_investimento
 
     print(f"""
 
     Categoria: Necessidade
-        Limite: R${round(necessidade, 2)}
+        Limite: R${round(orcamento["Necessidade"], 2)}
         Gasto: R${round(gastos_necessidade, 2)}
         Resto: R${round(resto_necessidade, 2)}
 
     Categoria: Lazer
-        Limite: R${round(lazer, 2)}
+        Limite: R${round(orcamento["Lazer"], 2)}
         Gasto: R${round(gastos_lazer, 2)}
         Resto: R${round(resto_lazer, 2)}
 
     Categoria: Investimento
-        Limite: R${round(investimento, 2)}
+        Limite: R${round(orcamento["Investimentos"], 2)}
         Gasto: R${round(gastos_investimento, 2)}
         Resto: R${round(resto_investimento, 2)}
 
@@ -55,14 +57,14 @@ def fazer_relatorio(necessidade, lazer, investimento):
     apertar_para_continuar()
 
 
-def listar_orcamento(necessidade, lazer, investimento):
+def listar_orcamento(orcamento):
     os.system("cls")
     print(f"""
-    Necessidade: R${round(necessidade,2)}
+    Necessidade: R${round(orcamento["Necessidade"],2)}
 
-    Lazer: R${round(lazer, 2)}
+    Lazer: R${round(orcamento["Lazer"], 2)}
 
-    Investimentos: R${round(investimento, 2)}
+    Investimentos: R${round(orcamento["Investimentos"], 2)}
     
     """)
     apertar_para_continuar()
@@ -100,7 +102,7 @@ def adicionar_gastos():
     print("Gasto adicionado com sucesso\n")
     apertar_para_continuar()
 
-def escolher_opcao(necessidade, lazer, investimento):
+def escolher_opcao(orcamento):
     print("""
     LISTA DE OPÇÔES
            
@@ -118,13 +120,13 @@ def escolher_opcao(necessidade, lazer, investimento):
 
     match escolha:
         case 1:
-            listar_orcamento(necessidade, lazer, investimento)
+            listar_orcamento(orcamento)
             sair = False
         case 2:
             adicionar_gastos()
             sair = False
         case 3:
-            fazer_relatorio(necessidade, lazer, investimento)
+            fazer_relatorio(orcamento)
             sair = False
         case 4:
             sair = True
@@ -137,12 +139,12 @@ def escolher_opcao(necessidade, lazer, investimento):
 def main():
     salario = float(input("Qual é o seu salário?"))
 
-    necessidade, lazer, investimento = organizar_orcamento(salario)
+    orcamento = organizar_orcamento(salario)
 
     sair = False
 
     while not sair:
-        sair = escolher_opcao(necessidade, lazer, investimento)
+        sair = escolher_opcao(orcamento)
         os.system("cls")
 
 if __name__ == "__main__":
