@@ -114,8 +114,14 @@ def apertar_para_continuar():
     input("aperte para continuar")
 
 def escolher_opcao(orcamento):
-    print("""
+    print(f"""
     LISTA DE OPÇÔES
+          
+    Salário: R${orcamento.salario:.2f}
+
+    Gasto Totais: R${orcamento.gasto_totais:.2f}
+
+    Saldo Restandte: R${orcamento.saldo:.2f}
            
     1- Ver Orçamento
            
@@ -176,15 +182,21 @@ def escolher_opcao(orcamento):
 
 def main():
     limpar_tela()
-    salario_valido = False
-    while not salario_valido:
-        try:
-            salario = float(input("Qual é o seu salário?"))
-            salario_valido = True
-        except ValueError:
-            print("Valor inválido")
 
-    orcamento = Orcamento(salario)
+    salario = Orcamento.carregar_salario()
+
+    if salario == None:
+        while True:
+                try:
+                    salario = float(input("Qual é o seu salário?"))
+                    break
+                except ValueError:
+                    print("Valor inválido")
+
+        orcamento = Orcamento(salario)
+        orcamento.salvar_salario()
+    else:
+        orcamento = Orcamento(salario)
 
     orcamento.carregar_historico()
 

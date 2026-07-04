@@ -5,6 +5,7 @@ from modelos.Gasto import Gasto
 class Orcamento:
     def __init__(self, salario):
         self._gastos = []
+        
         self._salario = salario
         
     @property
@@ -30,6 +31,14 @@ class Orcamento:
     @property
     def gastos(self):
         return self._gastos
+    
+    @property
+    def gasto_totais(self):
+        return sum(gasto.valor for gasto in self._gastos)
+    
+    @property
+    def saldo(self):
+        return self.salario - self.gasto_totais
     
     def listar_orcamento(self):
         print(            
@@ -63,6 +72,12 @@ Investimentos: R${self.investimentos:.2f}
 
     def excluir_gasto(self, posicao):
         del(self._gastos[posicao])
+
+    def salvar_salario(self):
+        with open("salario.csv","w", newline="", encoding="utf-8") as arquivo:
+            escritor = csv.writer(arquivo)
+
+            escritor.writerow([self.salario])
     
     def salvar_gastos(self):
         with open("gastos.csv", "w", newline="", encoding="utf-8") as arquivo:
@@ -72,6 +87,20 @@ Investimentos: R${self.investimentos:.2f}
 
             for gasto in self._gastos:
                 escritor.writerow(gasto.para_dict())
+    
+    @staticmethod
+    def carregar_salario():
+        try:
+            with open("salario.csv","r", encoding="utf-8") as arquivo:
+                leitor = csv.reader(arquivo)
+                
+                for linha in leitor:
+                    return float(linha[0])
+        
+        except:
+            return None
+
+        return None
 
     def carregar_historico(self):
         self._gastos.clear()
@@ -84,7 +113,8 @@ Investimentos: R${self.investimentos:.2f}
                     gasto = Gasto(
                         conteudo["Descrição"],
                         conteudo["Categoria"],
-                        float(conteudo["Valor"])
+                        float(conteudo["Valor"]),
+                        conteudo["Data"]
                     )
                     self._gastos.append(gasto)
         except FileNotFoundError:

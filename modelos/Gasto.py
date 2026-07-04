@@ -1,11 +1,15 @@
 from datetime import date
 
 class Gasto:
-    def __init__(self, descricao, categoria, valor):
+    def __init__(self, descricao, categoria, valor, data=None):
         self._descricao = descricao
         self._categoria = categoria
         self._valor = valor
-        self._data = date.today().strftime("%d/%m/%Y")
+        
+        if data == None:
+            self._data = date.today().strftime("%d/%m/%Y")
+        else:
+            self._data = data
 
     def __str__(self):
         return (
@@ -13,7 +17,6 @@ class Gasto:
             f"Categoria: {self.categoria}\n"
             f"Valor: {self.valor:.2f}\n"
             f"Data: {self._data}"
-
         )
 
     @property
