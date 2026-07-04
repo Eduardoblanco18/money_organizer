@@ -66,7 +66,7 @@ Investimentos: R${self.investimentos:.2f}
     
     def salvar_gastos(self):
         with open("gastos.csv", "w", newline="", encoding="utf-8") as arquivo:
-            escritor = csv.DictWriter(arquivo, fieldnames=["Descrição", "Categoria", "Valor"])
+            escritor = csv.DictWriter(arquivo, fieldnames=["Descrição", "Categoria", "Valor", "Data"])
         
             escritor.writeheader()
 

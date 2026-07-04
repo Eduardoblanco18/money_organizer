@@ -28,6 +28,10 @@ class Gasto:
     def valor(self):
         return self._valor
     
+    @property
+    def data(self):
+        return self._data
+    
     def editar_descricao(self, descricao_nova):
         self._descricao = descricao_nova
 
@@ -41,5 +45,6 @@ class Gasto:
         return {
             "Descrição": self.descricao,
             "Categoria": self.categoria,
-            "Valor": self.valor
+            "Valor": self.valor,
+            "Data": self.data
         }
