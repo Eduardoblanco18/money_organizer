@@ -24,12 +24,12 @@ class Orcamento:
         return self._salario
     
     @property
-    def gastos(self):
-        return self._gastos
-    
-    @property
     def categorias(self):
         return [("Necessidade", self.necessidade), ("Lazer", self.lazer), ("Investimentos", self.investimentos)]
+    
+    @property
+    def gastos(self):
+        return self._gastos
     
     def listar_orcamento(self):
         print(            
@@ -52,7 +52,7 @@ Investimentos: R${self.investimentos:.2f}
     
     def total_por_categoria(self, categoria):
         return sum(gasto.valor 
-                for gasto in self.gastos
+                for gasto in self._gastos
                 if gasto.categoria == categoria
                 )
     
@@ -70,7 +70,7 @@ Investimentos: R${self.investimentos:.2f}
         
             escritor.writeheader()
 
-            for gasto in self.gastos:
+            for gasto in self._gastos:
                 escritor.writerow(gasto.para_dict())
 
     def carregar_historico(self):
@@ -106,8 +106,10 @@ Categoria: {categoria}
         return texto
     
     def escrever_relatorio(self):
-        print(self.gerar_relatorio())
+        texto = self.gerar_relatorio()
+        
+        print(texto)
 
         with open("Relatório.txt", "w", encoding="utf-8") as arquivo:
-            arquivo.write(self.gerar_relatorio())
+            arquivo.write(texto)
     

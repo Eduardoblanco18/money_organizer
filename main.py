@@ -6,8 +6,7 @@ def editar_gasto(orcamento, detalhe, posicao):
 
     match detalhe:
         case "Descrição":
-            print("Qual é o novo nome?\n")
-            edicao = input(">")
+            edicao = input("Qual é o novo nome?\n>")
             gasto.editar_descricao(edicao)
         case "Categoria":
             edicao = escolher_categoria()
@@ -30,8 +29,7 @@ def escrever_valor():
     return valor
 
 def selecionar_detalhes():
-    print("Com o que você gastou?")
-    descricao = input(">")
+    descricao = input("Com o que você gastou?\n>")
 
     categoria = escolher_categoria()
 
@@ -113,7 +111,7 @@ O que deseja editar?
             print("Opção Inválida")
     
 def limpar_tela():
-    os.system("cls")
+    os.system("cls" if os.name == "nt" else "clear")
 
 def apertar_para_continuar():
     input("aperte para continuar")
