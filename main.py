@@ -66,49 +66,46 @@ def escolher_categoria():
 
 def editar_historico(orcamento):
     limpar_tela()
-    print(f"{"Nº":<3} {"Descrição":<15}{"Categoria":<20}{"Valor"}")
-    print("-"*50)
-    for indice, gasto in enumerate(orcamento.gastos):
-        print(f"{indice + 1:<3} {gasto.descricao:<15}{gasto.categoria:<20}{gasto.valor}")
+    if len(orcamento.gastos):
+        print(f"{"Nº":<3} {"Descrição":<15}{"Categoria":<20}{"Valor"}")
+        print("-"*50)
+        for indice, gasto in enumerate(orcamento.gastos):
+            print(f"{indice + 1:<3} {gasto.descricao:<15}{gasto.categoria:<20}{gasto.valor}")
 
-    posicao_valida = False
-    while not posicao_valida:
-        try:
-            posicao = int(input("Escolha um item que queira editar\n>")) - 1
-            if 0 <= posicao < len(orcamento.gastos):
-                posicao_valida = True
-            else:
+        posicao_valida = False
+        while not posicao_valida:
+            try:
+                posicao = int(input("Escolha um item que queira editar\n>")) - 1
+                if 0 <= posicao < len(orcamento.gastos):
+                    posicao_valida = True
+                else:
+                    print("Valor incompatível!")
+            except ValueError:
                 print("Valor incompatível!")
-        except ValueError:
-            print("Valor incompatível!")
-    limpar_tela()
-    print("""
-O que deseja editar?
-1- Trocar Nome
-2- Trocar Categoria
-3- Trocar Valor
-4- Excluir
-""")
-    
-    opcao_acessivel = False
-    while not opcao_acessivel:
-        try:
-            opcao_escolhida = int(input(">"))
-            opcao_acessivel = True
-            match opcao_escolhida:
-                case 1:
-                    editar_gasto(orcamento, "Descrição", posicao)
-                case 2:
-                    editar_gasto(orcamento, "Categoria", posicao)
-                case 3:
-                    editar_gasto(orcamento, "Valor", posicao)
-                case 4:
-                    orcamento.excluir_gasto(posicao)
-                case _:
-                    print("Opção Inválida")
-                    opcao_acessivel = False
-        except ValueError:
-            print("Opção Inválida")
+        limpar_tela()
+        print("O que deseja editar?\n1- Trocar Nome\n2- Trocar Categoria\n3- Trocar Valor\n4- Excluir")
+        
+        opcao_acessivel = False
+        while not opcao_acessivel:
+            try:
+                opcao_escolhida = int(input(">"))
+                opcao_acessivel = True
+                match opcao_escolhida:
+                    case 1:
+                        editar_gasto(orcamento, "Descrição", posicao)
+                    case 2:
+                        editar_gasto(orcamento, "Categoria", posicao)
+                    case 3:
+                        editar_gasto(orcamento, "Valor", posicao)
+                    case 4:
+                        orcamento.excluir_gasto(posicao)
+                    case _:
+                        print("Opção Inválida")
+                        opcao_acessivel = False
+            except ValueError:
+                print("Opção Inválida")
+    else:
+        print("histórico vazio\n")
     
 def limpar_tela():
     os.system("cls" if os.name == "nt" else "clear")
