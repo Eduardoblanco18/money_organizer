@@ -1,11 +1,61 @@
 import os
-import csv
-from datetime import date
+from modelos.Orcamento import Orcamento
 
-def excluir_gasto_da_lista(gastos, posicao):
-    certeza = input("Tem certeza que deseja apagar (s/n)\n>")
-    if certeza.lower() == "s":
-        del(gastos[posicao])
+def escrever_salario():
+    while True:
+        try:
+            salario = float(input("Qual é o seu salário?"))
+            break
+        except ValueError:
+            print("Valor inválido")
+    
+    return salario
+
+def menu_editar_salario(orcamento):
+    limpar_tela()
+    novo_salario = escrever_salario()
+
+    certeza = input("Tem certeza que deseja trocar? s/n\n>").lower()
+
+    if certeza == "s":
+        orcamento.alterar_salario(novo_salario)
+        orcamento.salvar_salario()
+        print("Troca realizada com sucesso")
+    else:
+        print("Alteração cancelada")
+
+def editar_gasto(orcamento, detalhe, posicao):
+    gasto = orcamento.gastos[posicao]
+
+    match detalhe:
+        case "Descrição":
+            edicao = input("Qual é o novo nome?\n>")
+            gasto.editar_descricao(edicao)
+        case "Categoria":
+            edicao = escolher_categoria()
+            gasto.editar_categoria(edicao)
+        case "Valor":
+            edicao = escrever_valor()
+            gasto.editar_valor(edicao)
+
+
+def escrever_valor():
+    while True:
+        try:
+            valor = float(input("Quanto você gastou?\n>"))
+            return valor
+        
+        except ValueError:
+            print("Valor inválido!")
+
+def selecionar_detalhes():
+    descricao = input("Com o que você gastou?\n>")
+
+    categoria = escolher_categoria()
+
+    valor = escrever_valor()
+
+    return descricao, categoria, valor
 
 def escolher_categoria():
     escolha_certa = False
@@ -34,184 +84,64 @@ def escolher_categoria():
 
     return categoria
 
-def editar_gasto(gastos, Detalhe, posicao):
+def editar_historico(orcamento):
     limpar_tela()
-    edicao_fazivel = False
-    while not edicao_fazivel:
-        try:
-            edicao_fazivel = True
-            if Detalhe == "Descrição":
-                edicao = input("Coloque o novo nome\n>")
-            elif Detalhe == "Categoria":
-                edicao = escolher_categoria()
-            else:
-                edicao = float(input("Coloque o novo valor\n>"))
-        except ValueError:
-            edicao_fazivel = False
-            print("Não é possível realizar a edição")
-    
-    gastos[posicao][Detalhe] = edicao
+    if len(orcamento.gastos):
+        print(f'{"Nº":<3} {"Descrição":<15} {"Categoria":<20} {"Valor"}')
+        print("-"*50)
+        for indice, gasto in enumerate(orcamento.gastos):
+            print(f"{indice + 1:<3} {gasto.descricao:<15}{gasto.categoria:<20}{gasto.valor}")
 
-def editar_historico(gastos):
-    limpar_tela()
-    print(f"{"Nº":<3} {"Descrição":<15}{"Categoria":<20}{"Valor"}")
-    print("-"*50)
-    for indice, gasto in enumerate(gastos):
-        print(f"{indice + 1:<3} {gasto["Descrição"]:<15}{gasto["Categoria"]:<20}{gasto["Valor"]}")
-
-    posicao_valida = False
-    while not posicao_valida:
-        try:
-            posicao = int(input("Escolha um item que queira editar\n>")) - 1
-            if 0 <= posicao < len(gastos):
-                posicao_valida = True
-            else:
+        posicao_valida = False
+        while not posicao_valida:
+            try:
+                posicao = int(input("Escolha um item que queira editar\n>")) - 1
+                if 0 <= posicao < len(orcamento.gastos):
+                    posicao_valida = True
+                else:
+                    print("Valor incompatível!")
+            except ValueError:
                 print("Valor incompatível!")
-        except ValueError:
-            print("Valor incompatível!")
-    limpar_tela()
-    print("""
-O que deseja editar?
-1- Trocar Nome
-2- Trocar Categoria
-3- Trocar Valor
-4- Excluir
-""")
-    
-    opcao_acessivel = False
-    while not opcao_acessivel:
-        try:
-            opcao_escolhida = int(input(">"))
-            opcao_acessivel = True
-            match opcao_escolhida:
-                case 1:
-                    editar_gasto(gastos, "Descrição", posicao)
-                case 2:
-                    editar_gasto(gastos, "Categoria", posicao)
-                case 3:
-                    editar_gasto(gastos, "Valor", posicao)
-                case 4:
-                    excluir_gasto_da_lista(gastos, posicao)
-                case _:
-                    print("Opção Inválida")
-                    opcao_acessivel = False
-        except ValueError:
-            print("Opção Inválida")
-
-
-    apertar_para_continuar()
-
-def vizualizar_historico(gastos):
-    limpar_tela()
-    print("-"*20)
-    for indice,gasto in enumerate(gastos):
-        print(f"{indice + 1}")
-        for chave, valor in gasto.items():
-            print(f"{chave}: {valor}")
-        print("-"*20)
-    
-    apertar_para_continuar()
-
-def ler_historico(gastos):
-    with open("gastos.csv","r", encoding="utf-8") as arquivo:
-        leitor = csv.DictReader(arquivo)
-
-        for conteudo in leitor:
-            conteudo["Valor"] = float(conteudo["Valor"])
-            gastos.append(conteudo)
-
-def salvar_gastos(gastos):
-    with open("gastos.csv", "w", newline="", encoding="utf-8") as arquivo:
-        escritor = csv.DictWriter(arquivo, fieldnames=["Descrição", "Categoria", "Valor", "Data"])
+        limpar_tela()
+        print("O que deseja editar?\n1- Trocar Nome\n2- Trocar Categoria\n3- Trocar Valor\n4- Excluir")
         
-        escritor.writeheader()
-
-        for gasto in gastos:
-            escritor.writerow(gasto)
-
-def gerar_relatorio(orcamento,gastos):
-    texto = ""
-    texto += f"Salário: R${round(orcamento["Salário"],2)}\n"
-    for categoria, limite in orcamento.items():
-        if categoria == "Salário":
-            continue
-        gasto = calcular_gasto(categoria,gastos)
-        resto = limite - gasto
-
-        texto += (f"""
-Categoria: {categoria}
-    Limite: R${round(orcamento[categoria],2)}
-    Gastos: R${round(gasto,2)}
-    Resto:  R${round(resto,2)}
-""")
+        opcao_acessivel = False
+        while not opcao_acessivel:
+            try:
+                opcao_escolhida = int(input(">"))
+                opcao_acessivel = True
+                match opcao_escolhida:
+                    case 1:
+                        editar_gasto(orcamento, "Descrição", posicao)
+                    case 2:
+                        editar_gasto(orcamento, "Categoria", posicao)
+                    case 3:
+                        editar_gasto(orcamento, "Valor", posicao)
+                    case 4:
+                        orcamento.excluir_gasto(posicao)
+                    case _:
+                        print("Opção Inválida")
+                        opcao_acessivel = False
+            except ValueError:
+                print("Opção Inválida")
+    else:
+        print("histórico vazio\n")
     
-    return texto
-
 def limpar_tela():
-    os.system("cls" if os.name == "nt"  else "clear")
+    os.system("cls" if os.name == "nt" else "clear")
 
 def apertar_para_continuar():
     input("aperte para continuar")
 
-def calcular_gasto(categoria,gastos):
-    return sum(gasto["Valor"] 
-               for gasto in gastos
-               if gasto["Categoria"] == categoria
-               )
-
-def organizar_orcamento(salario):
-        necessidade = salario*0.5
-        lazer = salario*0.3
-        investimento = salario*0.2
-        
-        print("Organização feita!")
-        apertar_para_continuar()
-        limpar_tela()
-
-        return {"Salário": salario,
-                "Necessidade": necessidade,
-                "Lazer": lazer,
-                "Investimentos": investimento}
-
-def fazer_relatorio(orcamento, gastos):
-    limpar_tela()
-
-    print(gerar_relatorio(orcamento, gastos))
-
-    with open("Relátorio.txt", "w", encoding="utf-8") as arquivo:
-        arquivo.write(gerar_relatorio(orcamento, gastos))
-
-    apertar_para_continuar()
-
-def listar_orcamento(orcamento):
-    limpar_tela()
-    for categoria in orcamento:
-        print(f"{categoria}: R${round(orcamento[categoria],2)}\n")
-    
-    apertar_para_continuar()
-
-def adicionar_gastos(gastos):
-    limpar_tela()
-    descricao = input("Com o que vc gastou?\n")
-
-    categoria = escolher_categoria()
-
-    valor_valido = False
-    while not valor_valido:
-        try:
-            valor = float(input("Quanto você gastou?\n"))
-            valor_valido = True
-        except ValueError:
-            print("Valor inválido!")
-
-    gastos.append({"Descrição": descricao, "Categoria": categoria, "Valor": valor, "Data":date.today().strftime("%d/%m/%Y")})
-
-    print("\nGasto adicionado com sucesso\n")
-    apertar_para_continuar()
-
-def escolher_opcao(orcamento,gastos):
-    print("""
+def escolher_opcao(orcamento):
+    print(f"""
     LISTA DE OPÇÔES
+          
+    Salário: R${orcamento.salario:.2f}
+
+    Gasto Totais: R${orcamento.gasto_totais:.2f}
+
+    Saldo Restandte: R${orcamento.saldo:.2f}
            
     1- Ver Orçamento
            
@@ -222,8 +152,10 @@ def escolher_opcao(orcamento,gastos):
     4- Ver Histórico de Gastos
           
     5- Editar Lista de Gastos
+
+    6- Alterar Salário
            
-    6- Sair
+    7- Sair
           
     """)
     try:
@@ -231,56 +163,56 @@ def escolher_opcao(orcamento,gastos):
 
         match escolha:
             case 1:
-                listar_orcamento(orcamento)
-                sair = False
+                limpar_tela()
+                orcamento.listar_orcamento()
             case 2:
-                adicionar_gastos(gastos)
-                sair = False
+                limpar_tela()
+                detalhes = selecionar_detalhes()
+                orcamento.adicionar_gasto(*detalhes)
             case 3:
-                fazer_relatorio(orcamento, gastos)
-                sair = False
+                limpar_tela()
+                orcamento.escrever_relatorio()
             case 4:
-                vizualizar_historico(gastos)
-                sair = False
+                limpar_tela()
+                orcamento.listar_historico()
             case 5:
-                editar_historico(gastos)
-                sair = False
+                editar_historico(orcamento)
             case 6:
-                salvar_gastos(gastos)
-                sair = True
+                menu_editar_salario(orcamento)
+            case 7:
+                orcamento.salvar_gastos()
+                limpar_tela()
+                return True
             case _:
                 print("valor não reconhecido")
-                apertar_para_continuar()
-                sair = False
+
     except ValueError:
         print("valor não reconhecido")
-        apertar_para_continuar()
-        sair = False
+    
+    apertar_para_continuar()
 
-    return sair
+    return False
 
 def main():
-    gastos=[]
-    salario_valido = False
-    while not salario_valido:
-        try:
-            salario = float(input("Qual é o seu salário?"))
-            salario_valido = True
-        except ValueError:
-            print("Valor inválido")
+    limpar_tela()
 
-    orcamento = organizar_orcamento(salario)
+    salario = Orcamento.carregar_salario()
 
-    try:
-        ler_historico(gastos)
-    except FileNotFoundError:
-        pass
+    if salario is None:
+        salario = escrever_salario()
+
+        orcamento = Orcamento(salario)
+        orcamento.salvar_salario()
+    else:
+        orcamento = Orcamento(salario)
+
+    orcamento.carregar_historico()
 
     sair = False
 
     while not sair:
-        sair = escolher_opcao(orcamento,gastos)
         limpar_tela()
+        sair = escolher_opcao(orcamento)
 
 if __name__ == "__main__":
     main()
