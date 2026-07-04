@@ -1,5 +1,6 @@
 import os
 import csv
+from datetime import date
 
 def excluir_gasto_da_lista(gastos, posicao):
     certeza = input("Tem certeza que deseja apagar (s/n)\n>")
@@ -121,7 +122,7 @@ def ler_historico(gastos):
 
 def salvar_gastos(gastos):
     with open("gastos.csv", "w", newline="", encoding="utf-8") as arquivo:
-        escritor = csv.DictWriter(arquivo, fieldnames=["Descrição", "Categoria", "Valor"])
+        escritor = csv.DictWriter(arquivo, fieldnames=["Descrição", "Categoria", "Valor", "Data"])
         
         escritor.writeheader()
 
@@ -147,7 +148,7 @@ Categoria: {categoria}
     return texto
 
 def limpar_tela():
-    os.system("cls")
+    os.system("cls" if os.name == "nt"  else "clear")
 
 def apertar_para_continuar():
     input("aperte para continuar")
@@ -178,7 +179,7 @@ def fazer_relatorio(orcamento, gastos):
     print(gerar_relatorio(orcamento, gastos))
 
     with open("Relátorio.txt", "w", encoding="utf-8") as arquivo:
-        arquivo.write(gerar_relatorio(orcamento))
+        arquivo.write(gerar_relatorio(orcamento, gastos))
 
     apertar_para_continuar()
 
@@ -203,7 +204,7 @@ def adicionar_gastos(gastos):
         except ValueError:
             print("Valor inválido!")
 
-    gastos.append({"Descrição": descricao, "Categoria": categoria, "Valor": valor})
+    gastos.append({"Descrição": descricao, "Categoria": categoria, "Valor": valor, "Data":date.today().strftime("%d/%m/%Y")})
 
     print("\nGasto adicionado com sucesso\n")
     apertar_para_continuar()
@@ -270,7 +271,10 @@ def main():
 
     orcamento = organizar_orcamento(salario)
 
-    ler_historico(gastos)
+    try:
+        ler_historico(gastos)
+    except FileNotFoundError:
+        pass
 
     sair = False
 
