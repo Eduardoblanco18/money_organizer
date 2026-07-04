@@ -4,6 +4,13 @@ class Gasto:
         self._categoria = categoria
         self._valor = valor
 
+    def __str__(self):
+        return (
+            f"Descrição: {self.descricao}\n"
+            f"Categoria: {self.categoria}\n"
+            f"Valor: {self.valor:.2f}"
+        )
+
     @property
     def descricao(self):
         return self._descricao
@@ -23,7 +30,7 @@ class Gasto:
         self._categoria = categoria_nova
 
     def editar_valor(self, valor_novo):
-        self._Valor = valor_novo
+        self._valor = valor_novo
 
     def para_dict(self):
         return {

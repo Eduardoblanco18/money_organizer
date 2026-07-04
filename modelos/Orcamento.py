@@ -20,11 +20,41 @@ class Orcamento:
         return self._salario*0.2
     
     @property
+    def salario(self):
+        return self._salario
+    
+    @property
     def gastos(self):
         return self._gastos
     
-    def limpar_tela(self):
-        os.system("cls")
+    @property
+    def categorias(self):
+        return [("Necessidade", self.necessidade), ("Lazer", self.lazer), ("Investimentos", self.investimentos)]
+    
+    def listar_orcamento(self):
+        print(            
+f"""Salário: R${self.salario:.2f}
+
+Necessidades: R${self.necessidade:.2f}
+
+Lazer: R${self.lazer:.2f}
+
+Investimentos: R${self.investimentos:.2f}
+
+""")
+        
+    def listar_historico(self):
+        print("-"*20)
+        for indice,gasto in enumerate(self._gastos, start= 1):
+            print(f"{indice}")
+            print(gasto)
+            print("-"*20)
+    
+    def total_por_categoria(self, categoria):
+        return sum(gasto.valor 
+                for gasto in self.gastos
+                if gasto.categoria == categoria
+                )
     
     def adicionar_gasto(self, descricao, categoria, valor):
         gasto = Gasto(descricao, categoria, valor)
@@ -34,122 +64,50 @@ class Orcamento:
     def excluir_gasto(self, posicao):
         del(self._gastos[posicao])
     
-    def calcular_gasto(self, categoria):
-        return sum(gasto.valor 
-                for gasto in self._gastos
-                if gasto.categoria == categoria
-                )
-    
     def salvar_gastos(self):
         with open("gastos.csv", "w", newline="", encoding="utf-8") as arquivo:
             escritor = csv.DictWriter(arquivo, fieldnames=["Descrição", "Categoria", "Valor"])
         
             escritor.writeheader()
 
-            for gasto in self._gastos:
+            for gasto in self.gastos:
                 escritor.writerow(gasto.para_dict())
 
     def carregar_historico(self):
-        with open("gastos.csv","r", encoding="utf-8") as arquivo:
-            leitor = csv.DictReader(arquivo)
+        self._gastos.clear()
 
-            for conteudo in leitor:
-                gasto = Gasto(
-                    conteudo["Descrição"],
-                    conteudo["Categoria"],
-                    float(conteudo["Valor"])
-                )
-                self._gastos.append(gasto)
+        try:
+            with open("gastos.csv","r", encoding="utf-8") as arquivo:
+                leitor = csv.DictReader(arquivo)
 
-    def menu_edicao(self):
-        self.limpar_tela()
-        print(f"{"Nº":<3} {"Descrição":<15}{"Categoria":<20}{"Valor"}")
-        print("-"*50)
-        for indice, gasto in enumerate(self._gastos):
-            print(f"{indice + 1:<3} {gasto.descricao:<15}{gasto.categoria:<20}{gasto.valor}")
+                for conteudo in leitor:
+                    gasto = Gasto(
+                        conteudo["Descrição"],
+                        conteudo["Categoria"],
+                        float(conteudo["Valor"])
+                    )
+                    self._gastos.append(gasto)
+        except FileNotFoundError:
+            pass
 
-        posicao_valida = False
-        while not posicao_valida:
-            try:
-                posicao = int(input("Escolha um item que queira editar\n>")) - 1
-                if 0 <= posicao < len(self._gastos):
-                    posicao_valida = True
-                else:
-                    print("Valor incompatível!")
-            except ValueError:
-                print("Valor incompatível!")
-        self.limpar_tela()
-        print("""
-O que deseja editar?
-1- Trocar Nome
-2- Trocar Categoria
-3- Trocar Valor
-4- Excluir
-""")
-        
-        opcao_acessivel = False
-        while not opcao_acessivel:
-            try:
-                opcao_escolhida = int(input(">"))
-                opcao_acessivel = True
-                match opcao_escolhida:
-                    case 1:
-                        self.editar_gasto("Descrição", posicao)
-                    case 2:
-                        self.editar_gasto("Categoria", posicao)
-                    case 3:
-                        self.editar_gasto("Valor", posicao)
-                    case 4:
-                        self.excluir_gasto(posicao)
-                    case _:
-                        print("Opção Inválida")
-                        opcao_acessivel = False
-            except ValueError:
-                print("Opção Inválida")
+    def gerar_relatorio(self):
+        texto = ""
+        texto += f"Salário: R${self.salario:.2f}\n"
+        for categoria, limite in self.categorias:
+            gasto = self.total_por_categoria(categoria)
+            resto = limite - gasto
 
-    def editar_gasto(self, detalhe, posicao):
-        self.limpar_tela()
-        gasto = self._gastos[posicao]
-        edicao_fazivel = False
-        while not edicao_fazivel:
-            try:
-                edicao_fazivel = True
-                if detalhe == "Descrição":
-                    edicao = input("Coloque o novo nome\n>")
-                    gasto.editar_descricao(edicao)
-                elif detalhe == "Categoria":
-                    edicao = self.escolher_categoria()
-                    gasto.editar_categoria(edicao)
-                else:
-                    edicao = float(input("Coloque o novo valor\n>"))
-                    gasto.editar_valor(edicao)
-            except ValueError:
-                edicao_fazivel = False
-                print("Não é possível realizar a edição")
+            texto += f"""
+Categoria: {categoria}
+    Limite: R${limite:.2f}
+    Gasto: R${gasto:.2f}
+    Resto: R${resto:.2f}
+"""
+        return texto
+    
+    def escrever_relatorio(self):
+        print(self.gerar_relatorio())
 
-    def escolher_categoria(self):
-        escolha_certa = False
-        while not escolha_certa:
-            print(
-"""Qual categoria ele se encaixa?
-1- Necessidade
-2- Lazer
-3- Investimentos""")
-            try:
-                opcao = int(input(">"))
-                match opcao:
-                    case 1:
-                        categoria = "Necessidade"
-                        escolha_certa = True
-                    case 2:
-                        categoria = "Lazer"
-                        escolha_certa = True
-                    case 3:
-                        categoria = "Investimentos"
-                        escolha_certa = True
-                    case _:
-                        print("Não existe essa opção")
-            except ValueError:
-                print("Não existe essa opção")
-        return categoria
+        with open("Relatório.txt", "w", encoding="utf-8") as arquivo:
+            arquivo.write(self.gerar_relatorio())
     
