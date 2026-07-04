@@ -1,6 +1,29 @@
 import os
 from modelos.Orcamento import Orcamento
 
+def escrever_salario():
+    while True:
+        try:
+            salario = float(input("Qual é o seu salário?"))
+            break
+        except ValueError:
+            print("Valor inválido")
+    
+    return salario
+
+def menu_editar_salario(orcamento):
+    limpar_tela()
+    novo_salario = escrever_salario()
+
+    certeza = input("Tem certeza que deseja trocar? s/n\n>").lower()
+
+    if certeza == "s":
+        orcamento.alterar_salario(novo_salario)
+        orcamento.salvar_salario()
+        print("Troca realizada com sucesso")
+    else:
+        print("Alteração cancelada")
+
 def editar_gasto(orcamento, detalhe, posicao):
     gasto = orcamento.gastos[posicao]
 
@@ -132,8 +155,10 @@ def escolher_opcao(orcamento):
     4- Ver Histórico de Gastos
           
     5- Editar Lista de Gastos
+
+    6- Alterar Salário
            
-    6- Sair
+    7- Sair
           
     """)
     try:
@@ -166,6 +191,10 @@ def escolher_opcao(orcamento):
                 apertar_para_continuar()
                 sair = False
             case 6:
+                menu_editar_salario(orcamento)
+                apertar_para_continuar()
+                sair = False
+            case 7:
                 orcamento.salvar_gastos()
                 limpar_tela()
                 sair = True
@@ -186,12 +215,7 @@ def main():
     salario = Orcamento.carregar_salario()
 
     if salario == None:
-        while True:
-                try:
-                    salario = float(input("Qual é o seu salário?"))
-                    break
-                except ValueError:
-                    print("Valor inválido")
+        salario = escrever_salario()
 
         orcamento = Orcamento(salario)
         orcamento.salvar_salario()

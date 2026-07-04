@@ -142,4 +142,8 @@ Categoria: {categoria}
 
         with open("Relatório.txt", "w", encoding="utf-8") as arquivo:
             arquivo.write(texto)
+
+    def alterar_salario(self, novo_salario):
+        self._salario = novo_salario
+        self.salvar_salario()
     
