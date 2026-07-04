@@ -161,6 +161,7 @@ def escolher_opcao(orcamento):
                 sair = False
             case 6:
                 orcamento.salvar_gastos()
+                limpar_tela()
                 sair = True
             case _:
                 print("valor não reconhecido")

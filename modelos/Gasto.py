@@ -1,14 +1,19 @@
+from datetime import date
+
 class Gasto:
     def __init__(self, descricao, categoria, valor):
         self._descricao = descricao
         self._categoria = categoria
         self._valor = valor
+        self._data = date.today().strftime("%d/%m/%Y")
 
     def __str__(self):
         return (
             f"Descrição: {self.descricao}\n"
             f"Categoria: {self.categoria}\n"
-            f"Valor: {self.valor:.2f}"
+            f"Valor: {self.valor:.2f}\n"
+            f"Data: {self._data}"
+
         )
 
     @property

@@ -1,0 +1,17 @@
+Salário: R$15000.0
+
+Categoria: Necessidade
+    Limite: R$7500.0
+    Gastos: R$1500.0
+    Resto:  R$6000.0
+
+Categoria: Lazer
+    Limite: R$4500.0
+    Gastos: R$0
+    Resto:  R$4500.0
+
+Categoria: Investimentos
+    Limite: R$3000.0
+    Gastos: R$0
+    Resto:  R$3000.0
+
