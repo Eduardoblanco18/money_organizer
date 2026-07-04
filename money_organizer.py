@@ -62,7 +62,7 @@ def editar_historico(gastos):
     while not posicao_valida:
         try:
             posicao = int(input("Escolha um item que queira editar\n>")) - 1
-            if 0 <= posicao <= len(gastos):
+            if 0 <= posicao < len(gastos):
                 posicao_valida = True
             else:
                 print("Valor incompatível!")
@@ -90,7 +90,7 @@ O que deseja editar?
                 case 3:
                     editar_gasto(gastos, "Valor", posicao)
                 case 4:
-                    excluir_gasto_da_lista(gasto, posicao)
+                    excluir_gasto_da_lista(gastos, posicao)
                 case _:
                     print("Opção Inválida")
                     opcao_acessivel = False
@@ -131,11 +131,11 @@ def salvar_gastos(gastos):
 def gerar_relatorio(orcamento,gastos):
     texto = ""
     texto += f"Salário: R${round(orcamento["Salário"],2)}\n"
-    for categoria in orcamento:
+    for categoria, limite in orcamento.items():
         if categoria == "Salário":
             continue
         gasto = calcular_gasto(categoria,gastos)
-        resto = orcamento[categoria] - gasto
+        resto = limite - gasto
 
         texto += (f"""
 Categoria: {categoria}
@@ -172,10 +172,10 @@ def organizar_orcamento(salario):
                 "Lazer": lazer,
                 "Investimentos": investimento}
 
-def fazer_relatorio(orcamento):
+def fazer_relatorio(orcamento, gastos):
     limpar_tela()
 
-    print(gerar_relatorio(orcamento))
+    print(gerar_relatorio(orcamento, gastos))
 
     with open("Relátorio.txt", "w", encoding="utf-8") as arquivo:
         arquivo.write(gerar_relatorio(orcamento))
