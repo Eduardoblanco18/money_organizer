@@ -40,16 +40,13 @@ def editar_gasto(orcamento, detalhe, posicao):
 
 
 def escrever_valor():
-    valor_valido = False
-    while not valor_valido:
+    while True:
         try:
-            valor = int(input("Quanto você gastou?\n>"))
-            valor_valido = True 
+            valor = float(input("Quanto você gastou?\n>"))
+            return valor
         
         except ValueError:
             print("Valor inválido!")
-    
-    return valor
 
 def selecionar_detalhes():
     descricao = input("Com o que você gastou?\n>")
@@ -90,7 +87,7 @@ def escolher_categoria():
 def editar_historico(orcamento):
     limpar_tela()
     if len(orcamento.gastos):
-        print(f"{"Nº":<3} {"Descrição":<15}{"Categoria":<20}{"Valor"}")
+        print(f'{"Nº":<3} {"Descrição":<15} {"Categoria":<20} {"Valor"}')
         print("-"*50)
         for indice, gasto in enumerate(orcamento.gastos):
             print(f"{indice + 1:<3} {gasto.descricao:<15}{gasto.categoria:<20}{gasto.valor}")
@@ -168,53 +165,40 @@ def escolher_opcao(orcamento):
             case 1:
                 limpar_tela()
                 orcamento.listar_orcamento()
-                apertar_para_continuar()
-                sair = False
             case 2:
                 limpar_tela()
                 detalhes = selecionar_detalhes()
                 orcamento.adicionar_gasto(*detalhes)
-                apertar_para_continuar()
-                sair = False
             case 3:
                 limpar_tela()
                 orcamento.escrever_relatorio()
-                apertar_para_continuar()
-                sair = False
             case 4:
                 limpar_tela()
                 orcamento.listar_historico()
-                apertar_para_continuar()
-                sair = False
             case 5:
                 editar_historico(orcamento)
-                apertar_para_continuar()
-                sair = False
             case 6:
                 menu_editar_salario(orcamento)
-                apertar_para_continuar()
-                sair = False
             case 7:
                 orcamento.salvar_gastos()
                 limpar_tela()
-                sair = True
+                return True
             case _:
                 print("valor não reconhecido")
-                apertar_para_continuar()
-                sair = False
+
     except ValueError:
         print("valor não reconhecido")
-        apertar_para_continuar()
-        sair = False
+    
+    apertar_para_continuar()
 
-    return sair
+    return False
 
 def main():
     limpar_tela()
 
     salario = Orcamento.carregar_salario()
 
-    if salario == None:
+    if salario is None:
         salario = escrever_salario()
 
         orcamento = Orcamento(salario)
