@@ -54,7 +54,7 @@ def escolher_data(str=""):
 
 def menu_historico(orcamento):
     if len(orcamento.gastos):
-        orcamento.listar_historico()
+        print(orcamento.listar_historico())
 
         filtro = input("\n\ndeseja adicionar algum filtro? s/n\n>")
 
@@ -78,17 +78,17 @@ Qual tipo de filtro?
             match tipo_de_filtro:
                 case 1:
                     descricao = input("Escreva o nome que procura\n>")
-                    orcamento.buscar_gasto_por_descricao(descricao)
+                    print(orcamento.buscar_gasto_por_descricao(descricao))
                 case 2:
                     categoria = escolher_categoria()
-                    orcamento.buscar_gasto_por_categoria(categoria)
+                    print(orcamento.buscar_gasto_por_categoria(categoria))
                 case 3:
                     data = escolher_data()
-                    orcamento.buscar_gasto_por_data(data)
+                    print(orcamento.buscar_gasto_por_data(data))
                 case 4:
                     data_inicio = escolher_data("de início")
                     data_fim = escolher_data("de fim")
-                    orcamento.buscar_gasto_por_perioso(data_inicio, data_fim)
+                    print(orcamento.buscar_gasto_por_perioso(data_inicio, data_fim))
     else:
         print("Historico vazio")
 
@@ -264,7 +264,7 @@ def escolher_opcao(orcamento):
                 orcamento.adicionar_gasto(*detalhes)
             case 3:
                 limpar_tela()
-                orcamento.escrever_relatorio()
+                print(orcamento.escrever_relatorio())
             case 4:
                 limpar_tela()
                 menu_historico(orcamento)
