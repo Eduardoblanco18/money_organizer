@@ -190,7 +190,7 @@ def escolher_opcao(orcamento):
           
     Salário: R${orcamento.salario:.2f}
 
-    Gasto Totais: R${orcamento.gasto_totais:.2f}
+    Gasto Totais: R${orcamento.total_gastos:.2f}
 
     Saldo Restandte: R${orcamento.saldo:.2f}
            

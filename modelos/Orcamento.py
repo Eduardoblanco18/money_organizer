@@ -34,12 +34,12 @@ class Orcamento:
         return self._gastos
     
     @property
-    def gasto_totais(self):
+    def total_gastos(self):
         return sum(gasto.valor for gasto in self._gastos)
     
     @property
     def saldo(self):
-        return self.salario - self.gasto_totais
+        return self.salario - self.total_gastos
     
     def listar_orcamento(self):
         print(            
