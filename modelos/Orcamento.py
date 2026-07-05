@@ -110,7 +110,7 @@ Investimentos: R${self.investimentos:.2f}
                 leitor = csv.DictReader(arquivo)
 
                 for conteudo in leitor:
-                    data = datetime.strptime(conteudo["Data"], "%d/%m/%Y").date()
+                    data = datetime.strptime(conteudo["Data"], "%Y-%m-%d").date()
 
                     gasto = Gasto(
                         conteudo["Descrição"],
@@ -167,6 +167,13 @@ Categoria: {categoria}
         print("-"*20)
         for indice, gasto in enumerate(self._gastos, start=1):
             if gasto.data == data:
+                print(indice)
+                print(gasto)
+    
+    def buscar_gasto_por_perioso(self, data_inicio, data_fim):
+        print("-"*20)
+        for indice, gasto in enumerate(self._gastos, start=1):
+            if data_inicio <= gasto.data <= data_fim:
                 print(indice)
                 print(gasto)
                 

@@ -2,9 +2,9 @@ import os
 from modelos.Orcamento import Orcamento
 from datetime import datetime
 
-def escolher_data():
+def escolher_data(str=""):
     while True:
-        data_str = input("Escreva a data que deseje procurar (dd/mm/aaaa)\n>")
+        data_str = input(f"Escreva a data {str} (dd/mm/aaaa)\n>")
 
         try:
             data = datetime.strptime(data_str, "%d/%m/%Y").date()
@@ -24,7 +24,8 @@ def menu_historico(orcamento):
 Qual tipo de filtro?
 1- Descrição
 2- Categoria
-3- Data
+3- Data específica
+4- Período
 """)    
             while True:
                 try:
@@ -44,6 +45,10 @@ Qual tipo de filtro?
                 case 3:
                     data = escolher_data()
                     orcamento.buscar_gasto_por_data(data)
+                case 4:
+                    data_inicio = escolher_data("de início")
+                    data_fim = escolher_data("de fim")
+                    orcamento.buscar_gasto_por_perioso(data_inicio, data_fim)
     else:
         print("Historico vazio")
 
