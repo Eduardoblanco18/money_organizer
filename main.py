@@ -2,6 +2,46 @@ import os
 from modelos.Orcamento import Orcamento
 from datetime import datetime
 
+def menu_estatisticas(orcamento):
+    while True:
+        limpar_tela()
+        print("""
+    Menu de estátisticas:
+    
+    1- Maior gasto
+    
+    2- Menor gasto
+    
+    3- Média dos gastos
+    
+    4- Categoria com maior gasto
+    
+    5- Categoria com menor gasto
+
+    6- Quantidade de gastos          
+
+    7- Sair""")
+        opcao = int(input(">"))
+        
+        limpar_tela()
+        match opcao:
+            case 1:
+                print(orcamento.maior_gasto)
+            case 2:
+                print(orcamento.menor_gasto)
+            case 3:
+                print(f"Média total dos seus gastos: {orcamento.media_gastos}\n")
+            case 4:
+                print(orcamento.categoria_com_maior_gasto)
+            case 5:
+                print(orcamento.categoria_com_menor_gasto)
+            case 6:
+                print(f"Quantidade de gastos: {orcamento.quantidade_gastos}\n")
+            case 7:
+                print("Saindo da aba de estatísticas\n")
+                return
+        apertar_para_continuar()
+
 def escolher_data(str=""):
     while True:
         data_str = input(f"Escreva a data {str} (dd/mm/aaaa)\n>")
@@ -38,7 +78,7 @@ Qual tipo de filtro?
             match tipo_de_filtro:
                 case 1:
                     descricao = input("Escreva o nome que procura\n>")
-                    orcamento.buscar_gasto_por_descrição(descricao)
+                    orcamento.buscar_gasto_por_descricao(descricao)
                 case 2:
                     categoria = escolher_categoria()
                     orcamento.buscar_gasto_por_categoria(categoria)
@@ -206,7 +246,9 @@ def escolher_opcao(orcamento):
 
     6- Alterar Salário
            
-    7- Sair
+    7- Estátiscas
+    
+    8- Sair
           
     """)
     try:
@@ -231,6 +273,8 @@ def escolher_opcao(orcamento):
             case 6:
                 menu_editar_salario(orcamento)
             case 7:
+                menu_estatisticas(orcamento)
+            case 8:
                 orcamento.salvar_gastos()
                 limpar_tela()
                 return True

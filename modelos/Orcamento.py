@@ -41,6 +41,42 @@ class Orcamento:
     def saldo(self):
         return self.salario - self.total_gastos
     
+    @property
+    def quantidade_gastos(self):
+        return len(self._gastos)
+    
+    @property
+    def maior_gasto(self):
+        if not self._gastos:
+            return None
+        return max(self._gastos, key=lambda gasto: gasto.valor)
+    
+    @property
+    def menor_gasto(self):
+        if not self._gastos:
+            return None
+        return min(self._gastos, key=lambda gasto: gasto.valor)
+    
+    @property
+    def media_gastos(self):
+        if not self._gastos:
+            return 0
+        return  self.total_gastos / self.quantidade_gastos 
+    
+    @property
+    def categoria_com_maior_gasto(self):
+        categoria = max(
+                        self.categorias, 
+                        key=lambda categoria: self.total_por_categoria(categoria[0]))
+        return f"A categoria com maior gasto foi {categoria[0]} com um total de R${self.total_por_categoria(categoria[0]):.2f}\n"
+    
+    @property
+    def categoria_com_menor_gasto(self):
+        categoria = min(
+                        self.categorias,
+                        key=lambda categoria: self.total_por_categoria(categoria[0]))
+        return f"A categoria com menor gasto foi {categoria[0]} com um total de R${self.total_por_categoria(categoria[0]):.2f}\n"
+    
     def listar_orcamento(self):
         print(            
 f"""Salário: R${self.salario:.2f}
@@ -149,10 +185,10 @@ Categoria: {categoria}
         self._salario = novo_salario
         self.salvar_salario()
 
-    def buscar_gasto_por_descrição(self, descrição):
+    def buscar_gasto_por_descricao(self, descricao):
         print("-"*20)
         for indice, gasto in enumerate(self._gastos, start=1):
-            if gasto.descricao.lower() == descrição.lower():
+            if gasto.descricao.lower() == descricao.lower():
                 print(indice)
                 print(gasto)
                 
