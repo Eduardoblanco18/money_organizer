@@ -1,5 +1,52 @@
 import os
 from modelos.Orcamento import Orcamento
+from datetime import datetime
+
+def escolher_data():
+    while True:
+        data_str = input("Escreva a data que deseje procurar (dd/mm/aaaa)\n>")
+
+        try:
+            data = datetime.strptime(data_str, "%d/%m/%Y").date()
+            return data
+        except ValueError:
+            print("Data inválida! Use o formato dd/mm/aaaa.")
+
+def menu_historico(orcamento):
+    if len(orcamento.gastos):
+        orcamento.listar_historico()
+
+        filtro = input("\n\ndeseja adicionar algum filtro? s/n\n>")
+
+        if filtro.lower() == "s":
+            limpar_tela()
+            print("""
+Qual tipo de filtro?
+1- Descrição
+2- Categoria
+3- Data
+""")    
+            while True:
+                try:
+                    tipo_de_filtro = int(input(">"))
+                    break
+                except ValueError:
+                    print("Valor não reconhecível!")
+
+            limpar_tela()
+            match tipo_de_filtro:
+                case 1:
+                    descricao = input("Escreva o nome que procura\n>")
+                    orcamento.buscar_gasto_por_descrição(descricao)
+                case 2:
+                    categoria = escolher_categoria()
+                    orcamento.buscar_gasto_por_categoria(categoria)
+                case 3:
+                    data = escolher_data()
+                    orcamento.buscar_gasto_por_data(data)
+    else:
+        print("Historico vazio")
+
 
 def escrever_salario():
     while True:
@@ -92,12 +139,11 @@ def editar_historico(orcamento):
         for indice, gasto in enumerate(orcamento.gastos):
             print(f"{indice + 1:<3} {gasto.descricao:<15}{gasto.categoria:<20}{gasto.valor}")
 
-        posicao_valida = False
-        while not posicao_valida:
+        while True:
             try:
                 posicao = int(input("Escolha um item que queira editar\n>")) - 1
                 if 0 <= posicao < len(orcamento.gastos):
-                    posicao_valida = True
+                    break
                 else:
                     print("Valor incompatível!")
             except ValueError:
@@ -174,7 +220,7 @@ def escolher_opcao(orcamento):
                 orcamento.escrever_relatorio()
             case 4:
                 limpar_tela()
-                orcamento.listar_historico()
+                menu_historico(orcamento)
             case 5:
                 editar_historico(orcamento)
             case 6:

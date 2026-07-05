@@ -5,18 +5,15 @@ class Gasto:
         self._descricao = descricao
         self._categoria = categoria
         self._valor = valor
-        
-        if data == None:
-            self._data = date.today().strftime("%d/%m/%Y")
-        else:
-            self._data = data
+        self._data = data if data else date.today()
 
     def __str__(self):
         return (
             f"Descrição: {self.descricao}\n"
             f"Categoria: {self.categoria}\n"
             f"Valor: {self.valor:.2f}\n"
-            f"Data: {self._data}"
+            f"Data: {self.data.strftime("%d/%m/%Y")}\n"
+            f"{"-"*20}"
         )
 
     @property

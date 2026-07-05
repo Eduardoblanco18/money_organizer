@@ -1,6 +1,7 @@
 import os
 import csv
 from modelos.Gasto import Gasto
+from datetime import datetime
 
 class Orcamento:
     def __init__(self, salario):
@@ -57,7 +58,6 @@ Investimentos: R${self.investimentos:.2f}
         for indice,gasto in enumerate(self._gastos, start= 1):
             print(f"{indice}")
             print(gasto)
-            print("-"*20)
     
     def total_por_categoria(self, categoria):
         return sum(gasto.valor 
@@ -110,11 +110,13 @@ Investimentos: R${self.investimentos:.2f}
                 leitor = csv.DictReader(arquivo)
 
                 for conteudo in leitor:
+                    data = datetime.strptime(conteudo["Data"], "%d/%m/%Y").date()
+
                     gasto = Gasto(
                         conteudo["Descrição"],
                         conteudo["Categoria"],
                         float(conteudo["Valor"]),
-                        conteudo["Data"]
+                        data
                     )
                     self._gastos.append(gasto)
         except FileNotFoundError:
@@ -146,4 +148,26 @@ Categoria: {categoria}
     def alterar_salario(self, novo_salario):
         self._salario = novo_salario
         self.salvar_salario()
+
+    def buscar_gasto_por_descrição(self, descrição):
+        print("-"*20)
+        for indice, gasto in enumerate(self._gastos, start=1):
+            if gasto.descricao.lower() == descrição.lower():
+                print(indice)
+                print(gasto)
+                
+    def buscar_gasto_por_categoria(self, categoria):
+        print("-"*20)
+        for indice, gasto in enumerate(self._gastos, start=1):
+            if gasto.categoria == categoria.title():
+                print(indice)
+                print(gasto)
+                
+    def buscar_gasto_por_data(self, data):
+        print("-"*20)
+        for indice, gasto in enumerate(self._gastos, start=1):
+            if gasto.data == data:
+                print(indice)
+                print(gasto)
+                
     
