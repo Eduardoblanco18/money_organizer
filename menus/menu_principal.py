@@ -2,10 +2,10 @@ from utils import limpar_tela
 from utils import apertar_para_continuar
 from utils import escolher_categoria
 from utils import escrever_valor
-from menu_editar_historico import editar_historico
-from menu_editar_salario import menu_editar_salario
-from menu_estatisticas import menu_estatisticas
-from menu_historico import menu_historico
+from menus.menu_editar_historico import editar_historico
+from menus.menu_editar_salario import menu_editar_salario
+from menus.menu_estatisticas import menu_estatisticas
+from menus.menu_historico import menu_historico
 
 def escolher_opcao(orcamento):
     print(f"""
