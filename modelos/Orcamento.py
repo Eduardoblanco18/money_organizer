@@ -68,14 +68,14 @@ class Orcamento:
         categoria = max(
                         self.categorias, 
                         key=lambda categoria: self.total_por_categoria(categoria[0]))
-        return f"A categoria com maior gasto foi {categoria[0]} com um total de R${self.total_por_categoria(categoria[0]):.2f}\n"
+        return (categoria[0], self.total_por_categoria(categoria[0]))
     
     @property
     def categoria_com_menor_gasto(self):
         categoria = min(
                         self.categorias,
                         key=lambda categoria: self.total_por_categoria(categoria[0]))
-        return f"A categoria com menor gasto foi {categoria[0]} com um total de R${self.total_por_categoria(categoria[0]):.2f}\n"
+        return (categoria[0], self.total_por_categoria(categoria[0]))
     
     def listar_orcamento(self):
         return (            
@@ -119,14 +119,6 @@ Categoria: {categoria}
     Gasto: R${gasto:.2f}
     Resto: R${resto:.2f}
 """
-        return texto
-    
-    def escrever_relatorio(self):
-        texto = self.gerar_relatorio()
-
-        with open("Relatório.txt", "w", encoding="utf-8") as arquivo:
-            arquivo.write(texto)
-        
         return texto
 
     def alterar_salario(self, novo_salario):

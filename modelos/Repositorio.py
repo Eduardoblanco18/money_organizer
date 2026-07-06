@@ -10,6 +10,7 @@ class RepositorioCSV:
 
         self._arquivo_gastos = self._pasta / "gastos.csv"
         self._arquivo_salario = self._pasta / "salario.csv"
+        self._arquivo_relatorio = self._pasta / "relatório.txt"
 
     def salvar_salario(self, salario):
         with open(self._arquivo_salario,"w", newline="", encoding="utf-8") as arquivo:
@@ -61,3 +62,6 @@ class RepositorioCSV:
 
         return gastos
     
+    def salvar_relatorio(self, texto):
+        with open(self._arquivo_relatorio, "w", encoding="utf-8") as arquivo:
+            arquivo.write(texto)

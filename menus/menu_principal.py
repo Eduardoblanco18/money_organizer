@@ -47,7 +47,9 @@ def escolher_opcao(orcamento, repositorio):
                 orcamento.adicionar_gasto(*detalhes)
             case 3:
                 limpar_tela()
-                print(orcamento.escrever_relatorio())
+                texto = orcamento.gerar_relatorio()
+                print(texto)
+                repositorio.salvar_relatorio(texto)
             case 4:
                 limpar_tela()
                 menu_historico(orcamento)
