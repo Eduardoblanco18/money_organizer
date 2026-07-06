@@ -1,5 +1,8 @@
-import os
 from modelos.Orcamento import Orcamento
+from tabelamento import mostrar_gastos
+from utils import limpar_tela
+from utils import apertar_para_continuar
+from utils import escrever_valor
 from datetime import datetime
 
 def menu_estatisticas(orcamento):
@@ -53,8 +56,8 @@ def escolher_data(str=""):
             print("Data inválida! Use o formato dd/mm/aaaa.")
 
 def menu_historico(orcamento):
-    if len(orcamento.gastos):
-        print(orcamento.listar_historico())
+    if orcamento.gastos:
+        mostrar_gastos(orcamento.gastos)
 
         filtro = input("\n\ndeseja adicionar algum filtro? s/n\n>")
 
@@ -78,34 +81,23 @@ Qual tipo de filtro?
             match tipo_de_filtro:
                 case 1:
                     descricao = input("Escreva o nome que procura\n>")
-                    print(orcamento.buscar_gasto_por_descricao(descricao))
+                    mostrar_gastos(orcamento.buscar_gasto_por_descricao(descricao))
                 case 2:
                     categoria = escolher_categoria()
-                    print(orcamento.buscar_gasto_por_categoria(categoria))
+                    mostrar_gastos(orcamento.buscar_gasto_por_categoria(categoria))
                 case 3:
                     data = escolher_data()
-                    print(orcamento.buscar_gasto_por_data(data))
+                    mostrar_gastos(orcamento.buscar_gasto_por_data(data))
                 case 4:
                     data_inicio = escolher_data("de início")
                     data_fim = escolher_data("de fim")
-                    print(orcamento.buscar_gasto_por_perioso(data_inicio, data_fim))
+                    mostrar_gastos(orcamento.buscar_gasto_por_periodo(data_inicio, data_fim))
     else:
         print("Historico vazio")
 
-
-def escrever_salario():
-    while True:
-        try:
-            salario = float(input("Qual é o seu salário?"))
-            break
-        except ValueError:
-            print("Valor inválido")
-    
-    return salario
-
 def menu_editar_salario(orcamento):
     limpar_tela()
-    novo_salario = escrever_salario()
+    novo_salario = escrever_valor("Qual é o seu salário?\n>")
 
     certeza = input("Tem certeza que deseja trocar? s/n\n>").lower()
 
@@ -127,74 +119,52 @@ def editar_gasto(orcamento, detalhe, posicao):
             edicao = escolher_categoria()
             gasto.editar_categoria(edicao)
         case "Valor":
-            edicao = escrever_valor()
+            edicao = escrever_valor("Quanto você gastou?\n>")
             gasto.editar_valor(edicao)
-
-
-def escrever_valor():
-    while True:
-        try:
-            valor = float(input("Quanto você gastou?\n>"))
-            return valor
-        
-        except ValueError:
-            print("Valor inválido!")
 
 def selecionar_detalhes():
     descricao = input("Com o que você gastou?\n>")
 
     categoria = escolher_categoria()
 
-    valor = escrever_valor()
+    valor = escrever_valor("Quanto foi o valor gasto?\n>")
 
     return descricao, categoria, valor
 
 def escolher_categoria():
-    escolha_certa = False
-    while not escolha_certa:
+    categorias = {
+        1:"Necessidade",
+        2:"Lazer",
+        3:"Investimentos"
+    }
+    while True:
         print(
 """Qual categoria ele se encaixa?
 1- Necessidade
 2- Lazer
 3- Investimentos""")
+        
         try:
-            opcao = int(input(">"))
-            match opcao:
-                case 1:
-                    categoria = "Necessidade"
-                    escolha_certa = True
-                case 2:
-                    categoria = "Lazer"
-                    escolha_certa = True
-                case 3:
-                    categoria = "Investimentos"
-                    escolha_certa = True
-                case _:
-                    print("Não existe essa opção")
-        except ValueError:
-            print("Não existe essa opção")
-
-    return categoria
+            return categorias[int(input(">"))]
+        except (ValueError, KeyError):
+            print("Não existe essa opção!")
 
 def editar_historico(orcamento):
     limpar_tela()
-    if len(orcamento.gastos):
-        print(f'{"Nº":<3} {"Descrição":<15} {"Categoria":<20} {"Valor"}')
-        print("-"*50)
-        for indice, gasto in enumerate(orcamento.gastos):
-            print(f"{indice + 1:<3} {gasto.descricao:<15}{gasto.categoria:<20}{gasto.valor}")
+    if orcamento.gastos:
+        mostrar_gastos(orcamento.gastos)
 
         while True:
             try:
                 posicao = int(input("Escolha um item que queira editar\n>")) - 1
-                if 0 <= posicao < len(orcamento.gastos):
+                if 0 <= posicao < orcamento.quantidade_gastos:
                     break
                 else:
                     print("Valor incompatível!")
             except ValueError:
                 print("Valor incompatível!")
         limpar_tela()
-        print("O que deseja editar?\n1- Trocar Nome\n2- Trocar Categoria\n3- Trocar Valor\n4- Excluir")
+        print("O que deseja editar?\n1- Trocar Nome\n2- Trocar Categoria\n3- Trocar Valor\n4- Excluir\n5-Cancelar")
         
         opcao_acessivel = False
         while not opcao_acessivel:
@@ -210,6 +180,8 @@ def editar_historico(orcamento):
                         editar_gasto(orcamento, "Valor", posicao)
                     case 4:
                         orcamento.excluir_gasto(posicao)
+                    case 5:
+                        print("Edição cancelada")    
                     case _:
                         print("Opção Inválida")
                         opcao_acessivel = False
@@ -217,12 +189,8 @@ def editar_historico(orcamento):
                 print("Opção Inválida")
     else:
         print("histórico vazio\n")
-    
-def limpar_tela():
-    os.system("cls" if os.name == "nt" else "clear")
 
-def apertar_para_continuar():
-    input("aperte para continuar")
+
 
 def escolher_opcao(orcamento):
     print(f"""
@@ -257,7 +225,7 @@ def escolher_opcao(orcamento):
         match escolha:
             case 1:
                 limpar_tela()
-                orcamento.listar_orcamento()
+                print(orcamento.listar_orcamento())
             case 2:
                 limpar_tela()
                 detalhes = selecionar_detalhes()
@@ -294,7 +262,7 @@ def main():
     salario = Orcamento.carregar_salario()
 
     if salario is None:
-        salario = escrever_salario()
+        salario = escrever_valor("Qual o seu salário?\n>")
 
         orcamento = Orcamento(salario)
         orcamento.salvar_salario()

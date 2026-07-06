@@ -78,7 +78,7 @@ class Orcamento:
         return f"A categoria com menor gasto foi {categoria[0]} com um total de R${self.total_por_categoria(categoria[0]):.2f}\n"
     
     def listar_orcamento(self):
-        print(            
+        return (            
 f"""Salário: R${self.salario:.2f}
 
 Necessidades: R${self.necessidade:.2f}
@@ -88,13 +88,6 @@ Lazer: R${self.lazer:.2f}
 Investimentos: R${self.investimentos:.2f}
 
 """)
-        
-    def listar_historico(self):
-        texto = "-"*20 + "\n"
-        for indice,gasto in enumerate(self._gastos, start= 1):
-            texto += str(indice) + "\n"
-            texto += str(gasto) + "\n"
-        return texto
     
     def total_por_categoria(self, categoria):
         return sum(gasto.valor 
@@ -187,38 +180,30 @@ Categoria: {categoria}
         self.salvar_salario()
 
     def buscar_gasto_por_descricao(self, descricao):
-        texto = "-"*20 + "\n"
-        for indice, gasto in enumerate(self._gastos, start=1):
-            if gasto.descricao.lower() == descricao.lower():
-                texto += str(indice) + "\n"
-                texto += str(gasto) + "\n"
-
-        return texto
+        return [
+            gasto
+            for gasto in self._gastos
+            if gasto.descricao.title() == descricao.title()
+        ]
                 
     def buscar_gasto_por_categoria(self, categoria):
-        texto = "-"*20 + "\n"
-        for indice, gasto in enumerate(self._gastos, start=1):
-            if gasto.categoria == categoria.title():
-                texto += str(indice) +"\n"
-                texto += str(gasto) + "\n"
-                
-        return texto
+        return [
+            gasto
+            for gasto in self._gastos
+            if gasto.categoria == categoria
+        ]
                 
     def buscar_gasto_por_data(self, data):
-        texto = "-"*20 + "\n"
-        for indice, gasto in enumerate(self._gastos, start=1):
-            if gasto.data == data:
-                texto += str(indice) + "\n"
-                texto += str(gasto) + "\n"
-                
-        return texto
+        return [
+            gasto
+            for gasto in self._gastos
+            if gasto.data == data
+        ]
     
-    def buscar_gasto_por_perioso(self, data_inicio, data_fim):
-        texto = "-"*20 + "\n"
-        for indice, gasto in enumerate(self._gastos, start=1):
-            if data_inicio <= gasto.data <= data_fim:
-                texto += str(indice) + "\n"
-                texto += str(gasto) + "\n"
- 
-        return texto               
+    def buscar_gasto_por_periodo(self, data_inicio, data_fim):
+        return [
+            gasto
+            for gasto in self._gastos
+            if data_inicio <= gasto.data <= data_fim
+        ]            
     
