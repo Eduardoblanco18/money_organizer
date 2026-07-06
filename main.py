@@ -1,4 +1,5 @@
 from modelos.Orcamento import Orcamento
+from modelos.Repositorio import RepositorioCSV
 from utils import limpar_tela
 from utils import escrever_valor
 from menus.menu_principal import escolher_opcao
@@ -7,23 +8,26 @@ from menus.menu_principal import escolher_opcao
 def main():
     limpar_tela()
 
-    salario = Orcamento.carregar_salario()
+    repositorio = RepositorioCSV()
+
+    salario = repositorio.carregar_salario()
 
     if salario is None:
         salario = escrever_valor("Qual o seu salário?\n>")
 
         orcamento = Orcamento(salario)
-        orcamento.salvar_salario()
+        repositorio.salvar_salario(salario)
     else:
         orcamento = Orcamento(salario)
 
-    orcamento.carregar_historico()
+    for gasto in repositorio.carregar_gastos():
+        orcamento.adicionar_gasto_objeto(gasto)
 
     sair = False
 
     while not sair:
         limpar_tela()
-        sair = escolher_opcao(orcamento)
+        sair = escolher_opcao(orcamento, repositorio)
 
 if __name__ == "__main__":
     main()

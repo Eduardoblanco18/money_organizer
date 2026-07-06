@@ -7,7 +7,7 @@ from menus.menu_editar_salario import menu_editar_salario
 from menus.menu_estatisticas import menu_estatisticas
 from menus.menu_historico import menu_historico
 
-def escolher_opcao(orcamento):
+def escolher_opcao(orcamento, repositorio):
     print(f"""
     LISTA DE OPÇÔES
           
@@ -54,11 +54,11 @@ def escolher_opcao(orcamento):
             case 5:
                 editar_historico(orcamento)
             case 6:
-                menu_editar_salario(orcamento)
+                menu_editar_salario(orcamento, repositorio)
             case 7:
                 menu_estatisticas(orcamento)
             case 8:
-                orcamento.salvar_gastos()
+                repositorio.salvar_gastos(orcamento.gastos)
                 limpar_tela()
                 return True
             case _:

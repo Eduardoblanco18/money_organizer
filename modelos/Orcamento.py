@@ -100,57 +100,11 @@ Investimentos: R${self.investimentos:.2f}
 
         self._gastos.append(gasto)
 
+    def adicionar_gasto_objeto(self, gasto):
+        self._gastos.append(gasto)
+
     def excluir_gasto(self, posicao):
         del(self._gastos[posicao])
-
-    def salvar_salario(self):
-        with open("salario.csv","w", newline="", encoding="utf-8") as arquivo:
-            escritor = csv.writer(arquivo)
-
-            escritor.writerow([self.salario])
-    
-    def salvar_gastos(self):
-        with open("gastos.csv", "w", newline="", encoding="utf-8") as arquivo:
-            escritor = csv.DictWriter(arquivo, fieldnames=["Descrição", "Categoria", "Valor", "Data"])
-        
-            escritor.writeheader()
-
-            for gasto in self._gastos:
-                escritor.writerow(gasto.para_dict())
-    
-    @staticmethod
-    def carregar_salario():
-        try:
-            with open("salario.csv","r", encoding="utf-8") as arquivo:
-                leitor = csv.reader(arquivo)
-                
-                for linha in leitor:
-                    return float(linha[0])
-        
-        except:
-            return None
-
-        return None
-
-    def carregar_historico(self):
-        self._gastos.clear()
-
-        try:
-            with open("gastos.csv","r", encoding="utf-8") as arquivo:
-                leitor = csv.DictReader(arquivo)
-
-                for conteudo in leitor:
-                    data = datetime.strptime(conteudo["Data"], "%Y-%m-%d").date()
-
-                    gasto = Gasto(
-                        conteudo["Descrição"],
-                        conteudo["Categoria"],
-                        float(conteudo["Valor"]),
-                        data
-                    )
-                    self._gastos.append(gasto)
-        except FileNotFoundError:
-            pass
 
     def gerar_relatorio(self):
         texto = ""
@@ -177,7 +131,6 @@ Categoria: {categoria}
 
     def alterar_salario(self, novo_salario):
         self._salario = novo_salario
-        self.salvar_salario()
 
     def buscar_gasto_por_descricao(self, descricao):
         return self._filtrar(lambda gasto: descricao.title() in gasto.descricao.title())
