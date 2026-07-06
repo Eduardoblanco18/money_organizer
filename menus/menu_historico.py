@@ -2,8 +2,9 @@ from utils import limpar_tela
 from utils import escolher_categoria
 from utils import escolher_data
 from tabelamento import mostrar_gastos
+from modelos.Orcamento import Orcamento
 
-def menu_historico(orcamento):
+def menu_historico(orcamento:Orcamento)->None:
     if not orcamento.gastos:
         print("Historico vazio")
         return
@@ -16,7 +17,7 @@ def menu_historico(orcamento):
         aplicar_filtro(orcamento)
         
 
-def aplicar_filtro(orcamento):
+def aplicar_filtro(orcamento:Orcamento)->None:
     limpar_tela()
     print("""
 Qual tipo de filtro?

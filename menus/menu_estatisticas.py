@@ -1,7 +1,8 @@
 from utils import limpar_tela
 from utils import apertar_para_continuar
+from modelos.Orcamento import Orcamento
 
-def menu_estatisticas(orcamento):
+def menu_estatisticas(orcamento:Orcamento)->None:
     while True:
         limpar_tela()
         print("""

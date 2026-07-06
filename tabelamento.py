@@ -1,6 +1,7 @@
 from tabulate import tabulate
+from modelos.Gasto import Gasto
 
-def mostrar_gastos(gastos):
+def mostrar_gastos(gastos:Gasto)->None:
     dados = []
 
     for indice, gasto in enumerate(gastos, start=1):

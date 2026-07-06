@@ -12,13 +12,13 @@ class RepositorioCSV:
         self._arquivo_salario = self._pasta / "salario.csv"
         self._arquivo_relatorio = self._pasta / "relatório.txt"
 
-    def salvar_salario(self, salario):
+    def salvar_salario(self, salario:float)->None:
         with open(self._arquivo_salario,"w", newline="", encoding="utf-8") as arquivo:
             escritor = csv.writer(arquivo)
 
             escritor.writerow([salario])
     
-    def salvar_gastos(self, gastos):
+    def salvar_gastos(self, gastos:list[Gasto])->None:
         with open(self._arquivo_gastos, "w", newline="", encoding="utf-8") as arquivo:
             escritor = csv.DictWriter(arquivo, fieldnames=["Descrição", "Categoria", "Valor", "Data"])
         
@@ -27,7 +27,7 @@ class RepositorioCSV:
             for gasto in gastos:
                 escritor.writerow(gasto.para_dict())
     
-    def carregar_salario(self):
+    def carregar_salario(self)->float|None:
         try:
             with open(self._arquivo_salario,"r", encoding="utf-8") as arquivo:
                 leitor = csv.reader(arquivo)
@@ -40,7 +40,7 @@ class RepositorioCSV:
 
         return None
 
-    def carregar_gastos(self):
+    def carregar_gastos(self)->list[Gasto]:
         gastos = []
 
         try:
@@ -62,6 +62,6 @@ class RepositorioCSV:
 
         return gastos
     
-    def salvar_relatorio(self, texto):
+    def salvar_relatorio(self, texto:str)->None:
         with open(self._arquivo_relatorio, "w", encoding="utf-8") as arquivo:
             arquivo.write(texto)

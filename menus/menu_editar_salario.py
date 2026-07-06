@@ -1,7 +1,9 @@
 from utils import limpar_tela
 from utils import escrever_valor
+from modelos.Orcamento import Orcamento
+from modelos.Repositorio import RepositorioCSV
 
-def menu_editar_salario(orcamento, repositorio):
+def menu_editar_salario(orcamento:Orcamento, repositorio:RepositorioCSV)->None:
     limpar_tela()
     novo_salario = escrever_valor("Qual é o seu salário?\n>")
 

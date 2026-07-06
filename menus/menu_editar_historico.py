@@ -2,8 +2,9 @@ from utils import limpar_tela
 from utils import escolher_categoria
 from utils import escrever_valor
 from tabelamento import mostrar_gastos
+from modelos.Orcamento import Orcamento
 
-def editar_historico(orcamento):
+def editar_historico(orcamento:Orcamento)->None:
     limpar_tela()
     if orcamento.gastos:
         mostrar_gastos(orcamento.gastos)
@@ -44,7 +45,7 @@ def editar_historico(orcamento):
     else:
         print("histórico vazio\n")
 
-def editar_gasto(orcamento, detalhe, posicao):
+def editar_gasto(orcamento:Orcamento, detalhe:str, posicao:int):
     gasto = orcamento.gastos[posicao]
 
     match detalhe:

@@ -6,8 +6,10 @@ from menus.menu_editar_historico import editar_historico
 from menus.menu_editar_salario import menu_editar_salario
 from menus.menu_estatisticas import menu_estatisticas
 from menus.menu_historico import menu_historico
+from modelos.Orcamento import Orcamento
+from modelos.Repositorio import RepositorioCSV
 
-def escolher_opcao(orcamento, repositorio):
+def escolher_opcao(orcamento:Orcamento, repositorio:RepositorioCSV)->bool:
     print(f"""
     LISTA DE OPÇÔES
           
@@ -73,7 +75,7 @@ def escolher_opcao(orcamento, repositorio):
 
     return False
 
-def selecionar_detalhes():
+def selecionar_detalhes()->tuple[str, str, float]:
     descricao = input("Com o que você gastou?\n>")
 
     categoria = escolher_categoria()

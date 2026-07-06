@@ -1,13 +1,13 @@
 import os
 from datetime import datetime
 
-def limpar_tela():
+def limpar_tela()->None:
     os.system("cls" if os.name == "nt" else "clear")
 
-def apertar_para_continuar():
+def apertar_para_continuar()->None:
     input("aperte para continuar")
 
-def escrever_valor(texto = ">"):
+def escrever_valor(texto:str = ">")->float:
     while True:
         try:
             valor = float(input(texto))
@@ -16,9 +16,9 @@ def escrever_valor(texto = ">"):
         except ValueError:
             print("Valor inválido!")
 
-def escolher_data(str=""):
+def escolher_data(texto:str="")->datetime:
     while True:
-        data_str = input(f"Escreva a data {str} (dd/mm/aaaa)\n>")
+        data_str = input(f"Escreva a data {texto} (dd/mm/aaaa)\n>")
 
         try:
             data = datetime.strptime(data_str, "%d/%m/%Y").date()
@@ -26,7 +26,7 @@ def escolher_data(str=""):
         except ValueError:
             print("Data inválida! Use o formato dd/mm/aaaa.")
 
-def escolher_categoria():
+def escolher_categoria()->str:
     categorias = {
         1:"Necessidade",
         2:"Lazer",
