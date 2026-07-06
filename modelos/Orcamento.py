@@ -180,30 +180,21 @@ Categoria: {categoria}
         self.salvar_salario()
 
     def buscar_gasto_por_descricao(self, descricao):
-        return [
-            gasto
-            for gasto in self._gastos
-            if gasto.descricao.title() == descricao.title()
-        ]
-                
+        return self._filtrar(lambda gasto: descricao.title() in gasto.descricao.title())
+    
     def buscar_gasto_por_categoria(self, categoria):
-        return [
-            gasto
-            for gasto in self._gastos
-            if gasto.categoria == categoria
-        ]
+        return self._filtrar(lambda gasto: gasto.categoria == categoria)
                 
     def buscar_gasto_por_data(self, data):
-        return [
-            gasto
-            for gasto in self._gastos
-            if gasto.data == data
-        ]
+        return self._filtrar(lambda gasto: gasto.data == data)
     
     def buscar_gasto_por_periodo(self, data_inicio, data_fim):
+        return self._filtrar(lambda gasto: data_inicio <= gasto.data <= data_fim)      
+    
+    def _filtrar(self, condicao):
         return [
             gasto
             for gasto in self._gastos
-            if data_inicio <= gasto.data <= data_fim
-        ]            
+            if condicao(gasto)
+        ]
     
