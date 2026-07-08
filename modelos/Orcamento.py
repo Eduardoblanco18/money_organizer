@@ -117,6 +117,12 @@ Categoria: {categoria}
     Limite: R${limite:.2f}
     Gasto: R${gasto:.2f}
     Resto: R${resto:.2f}
+    Porcentagem usada: {(self.total_por_categoria(categoria)/limite):.2%}
+"""
+            if resto < 0:
+                texto+=f"""
+    Você ultrapassou seu limite nesta categoria
+    Você ultrapassou o limite por R${abs(resto):.2f}
 """
         return texto
 
