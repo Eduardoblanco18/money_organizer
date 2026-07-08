@@ -124,7 +124,7 @@ Categoria: {categoria}
         self._salario = novo_salario
 
     def buscar_gasto_por_descricao(self, descricao:str)->list[Gasto]:
-        return self._filtrar(lambda gasto: descricao.title() in gasto.descricao.title())
+        return self._filtrar(lambda gasto: descricao.lower() in gasto.descricao.lower())
     
     def buscar_gasto_por_categoria(self, categoria:str)->list[Gasto]:
         return self._filtrar(lambda gasto: gasto.categoria == categoria)
